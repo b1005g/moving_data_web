@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent } from "../ui/card.jsx";
 import CategoryButton from "./CategoryButton.jsx";
 import categories from "../../data/categories.js";

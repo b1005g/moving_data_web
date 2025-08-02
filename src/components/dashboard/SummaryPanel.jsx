@@ -1,4 +1,8 @@
-function SummaryPanel({ stats }) {
+import React from "react";
+import { Users2, PartyPopper, MapPin, LucideSun } from "lucide-react";
+import { Card, CardContent } from "../ui/card.jsx";
+
+export default function SummaryPanel({ stats }) {
     const items = [
       { icon: <Users2 size={32} />, label: "예상인구", value: stats.population },
       { icon: <PartyPopper size={32} />, label: "행사", value: stats.events },

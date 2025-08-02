@@ -1,4 +1,5 @@
-function MapPlaceholder() {
+import React from "react";
+export default function MapPlaceholder() {
     return (
       <div className="relative h-full w-full overflow-hidden rounded-3xl border-2 border-slate-300 dark:border-slate-600">
         <div className="absolute inset-0 flex items-center justify-center font-semibold text-slate-400">
