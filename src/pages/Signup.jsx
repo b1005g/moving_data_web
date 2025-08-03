@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import { Input } from "../components/ui/input.jsx";
 import { Select, SelectItem } from "../components/ui/select.jsx";
-import { Button } from "../components/ui/button.jsx";
+// import { Button } from "../components/ui/button.jsx";
 import { Checkbox } from "../components/ui/checkbox.jsx"; 
 import { useAuth } from "../contexts/AuthContext.jsx";
 
@@ -12,7 +12,8 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     name: "",
-    nickname: "",
+    company: "",
+    customCompany: "",
     email: "",
     password: "",
     address: "",
@@ -21,6 +22,14 @@ export default function Signup() {
     refCode: "",
     agree: false,
   });
+
+  const companies = [
+    "학생",
+    "회사원",
+    "요식업",
+    "숙박업소",
+    "Other"  // 기타 선택지
+  ];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,218 +41,185 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!form.agree) {
       return setError("약관에 동의해 주세요.");
     }
     setError("");
+
+    const company =
+      form.company === "Other" ? form.customCompany : form.company;
+
     try {
       await signup(form.email, form.password);
+
     } catch (err) {
       setError(err.message || "회원가입에 실패했습니다");
     }
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center py-5" 
-         style={{background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'}}>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-lg-8 col-xl-6">
-            <div className="card shadow-lg border-0" style={{borderRadius: '20px'}}>
-              <div className="card-body p-5">
-                {/* 제목 */}
-                <div className="text-center mb-4">
-                  <i className="fas fa-user-plus fa-3x text-primary mb-3"></i>
-                  <h2 className="fw-bold text-dark">회원가입</h2>
-                  <p className="text-muted">Moving Data 시스템에 가입하세요</p>
-                </div>
+    <Container fluid className="vh-100 d-flex align-items-center justify-content-center bg-light"
+      style={{background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",}}
+    >
+      <Row className="w-100 justify-content-center">
+        <Col xs={12} md={8} lg={6}>
+          <div className="card shadow-sm p-4">
+            <h2 className="text-center mb-4">회원가입</h2>
+            {error && <Alert variant="danger">{error}</Alert>}
 
-                {/* 회원가입 폼 */}
-                <form onSubmit={handleSubmit}>
-                  {/* 이름 / 별명 */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-user me-2 text-primary"></i>이름
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        className="form-control"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="홍길동"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-id-badge me-2 text-primary"></i>별명
-                      </label>
-                      <input
-                        type="text"
-                        name="nickname"
-                        className="form-control"
-                        value={form.nickname}
-                        onChange={handleChange}
-                        placeholder="길동이"
-                        required
-                      />
-                    </div>
-                  </div>
+            <Form onSubmit={handleSubmit}>
 
-                  {/* 이메일 / 비밀번호 */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-envelope me-2 text-primary"></i>이메일
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        className="form-control"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="you@example.com"
-                        required
-                      />
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-lock me-2 text-primary"></i>비밀번호
-                      </label>
-                      <input
-                        type="password"
-                        name="password"
-                        className="form-control"
-                        value={form.password}
-                        onChange={handleChange}
-                        placeholder="비밀번호"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {/* 주소 */}
-                  <div className="mb-3">
-                    <label className="form-label fw-bold">
-                      <i className="fas fa-map-marker-alt me-2 text-primary"></i>주소
-                    </label>
-                    <input
-                      type="text"
-                      name="address"
-                      className="form-control"
-                      value={form.address}
+              {/* 이름 / 직장 */}
+              <Row className="mb-3">
+                <Col>
+                  <Form.Group controlId="name">
+                    <Form.Label>이름</Form.Label>
+                    <Form.Control
+                      name="name"
+                      value={form.name}
                       onChange={handleChange}
-                      placeholder="서울특별시 강남구"
+                      placeholder="홍길동"
                       required
                     />
-                  </div>
-
-                  {/* 상세주소 */}
-                  <div className="mb-3">
-                    <label className="form-label fw-bold">
-                      <i className="fas fa-home me-2 text-primary"></i>상세주소 
-                      <span className="text-muted fw-normal">(선택)</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="detail"
-                      className="form-control"
-                      value={form.detail}
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="company">
+                    <Form.Label>직장</Form.Label>
+                    <Form.Select
+                      name="company"
+                      value={form.company}
                       onChange={handleChange}
-                      placeholder="상세주소를 입력해주세요"
-                    />
-                  </div>
-
-                  {/* 가입 경로 / 추천인 코드 */}
-                  <div className="row mb-3">
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-route me-2 text-primary"></i>가입 경로
-                      </label>
-                      <select
-                        name="channel"
-                        className="form-select"
-                        value={form.channel}
+                      required
+                    >
+                      <option value="">선택하세요</option>
+                      {companies.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                  {form.company === "Other" && (
+                    <Form.Group controlId="customCompany" className="mt-2">
+                      <Form.Label>직장 직접 입력</Form.Label>
+                      <Form.Control
+                        name="customCompany"
+                        value={form.customCompany}
                         onChange={handleChange}
-                      >
-                        <option value="">선택하세요</option>
-                        <option value="sns">SNS 광고</option>
-                        <option value="friend">친구 추천</option>
-                        <option value="search">검색 엔진</option>
-                      </select>
-                    </div>
-                    <div className="col-md-6">
-                      <label className="form-label fw-bold">
-                        <i className="fas fa-gift me-2 text-primary"></i>추천인 코드
-                      </label>
-                      <input
-                        type="text"
-                        name="refCode"
-                        className="form-control"
-                        value={form.refCode}
-                        onChange={handleChange}
-                        placeholder="선택사항"
+                        placeholder="직장을 입력하세요"
+                        required
                       />
-                    </div>
-                  </div>
-
-                  {/* 약관 동의 */}
-                  <div className="form-check mb-4">
-                    <input
-                      type="checkbox"
-                      name="agree"
-                      className="form-check-input"
-                      id="agree"
-                      checked={form.agree}
-                      onChange={handleChange}
-                    />
-                    <label className="form-check-label" htmlFor="agree">
-                      개인정보 수집 및 이용에 동의합니다.
-                    </label>
-                  </div>
-
-                  {/* 에러 메시지 */}
-                  {error && (
-                    <div className="alert alert-danger text-center" role="alert">
-                      <i className="fas fa-exclamation-triangle me-2"></i>
-                      {error}
-                    </div>
+                    </Form.Group>
                   )}
+                </Col>
+              </Row>
 
-                  {/* 제출 버튼 */}
-                  <button
-                    type="submit"
-                    className="btn btn-lg w-100 text-white fw-bold"
-                    style={{
-                      background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                      border: 'none'
-                    }}
-                  >
-                    <i className="fas fa-check me-2"></i>가입 완료
-                  </button>
-                </form>
+              {/* 이메일 / 비밀번호 */}
+              <Row className="mb-3">
+                <Col>
+                  <Form.Group controlId="email">
+                    <Form.Label>이메일</Form.Label>
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="password">
+                    <Form.Label>비밀번호</Form.Label>
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      value={form.password}
+                      onChange={handleChange}
+                      placeholder="비밀번호"
+                      required
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
 
-                {/* 로그인 링크 */}
-                <div className="text-center mt-4">
-                  <p className="text-muted mb-2">이미 계정이 있으신가요?</p>
-                  <Link to="/login" className="btn btn-outline-primary">
-                    <i className="fas fa-sign-in-alt me-2"></i>로그인하러 가기
-                  </Link>
-                </div>
-              </div>
-            </div>
+              {/* 주소 / 상세주소 */}
+              <Form.Group controlId="address" className="mb-3">
+                <Form.Label>주소</Form.Label>
+                <Form.Control
+                  name="address"
+                  value={form.address}
+                  onChange={handleChange}
+                  placeholder="서울특별시 강남구"
+                  required
+                />
+              </Form.Group>
+              <Form.Group controlId="detail" className="mb-3">
+                <Form.Label>상세주소 <small className="text-muted">(선택)</small></Form.Label>
+                <Form.Control
+                  name="detail"
+                  value={form.detail}
+                  onChange={handleChange}
+                  placeholder="상세주소를 입력해주세요."
+                />
+              </Form.Group>
 
-            {/* 푸터 */}
-            <div className="text-center mt-4">
-              <p className="text-white-50">
-                © 2024 Moving Data Web. All rights reserved.
-              </p>
+              {/* 가입 경로 / 추천인 코드 */}
+              <Row className="mb-3">
+                <Col>
+                  <Form.Group controlId="channel">
+                    <Form.Label>가입 경로</Form.Label>
+                    <Form.Select
+                      name="channel"
+                      value={form.channel}
+                      onChange={handleChange}
+                      required
+                    >
+                      <option value="">선택하세요</option>
+                      <option value="sns">SNS 광고</option>
+                      <option value="friend">친구 추천</option>
+                      <option value="search">검색 엔진</option>
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group controlId="refCode">
+                    <Form.Label>추천인 코드 <small className="text-muted">(선택)</small></Form.Label>
+                    <Form.Control
+                      name="refCode"
+                      value={form.refCode}
+                      onChange={handleChange}
+                      placeholder="선택사항"
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+
+              {/* 약관 동의 */}
+              <Form.Group controlId="agree" className="mb-4">
+                <Form.Check
+                  type="checkbox"
+                  name="agree"
+                  label="개인정보 수집 및 이용에 동의합니다."
+                  checked={form.agree}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+
+              <Button variant="primary" type="submit" className="w-100 py-2">
+                가입 완료
+              </Button>
+            </Form>
+
+            <div className="text-center mt-3">
+              이미 계정이 있으신가요? <a href="/login">로그인하러 가기</a>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }

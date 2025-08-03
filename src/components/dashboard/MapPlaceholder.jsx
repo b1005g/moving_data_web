@@ -1,10 +1,9 @@
 import React from "react";
+
 export default function MapPlaceholder() {
-    return (
-      <div className="relative h-full w-full overflow-hidden rounded-3xl border-2 border-slate-300 dark:border-slate-600">
-        <div className="absolute inset-0 flex items-center justify-center font-semibold text-slate-400">
-          지도 컴포넌트 자리 (추후 Leaflet / Mapbox GL)
-        </div>
-      </div>
-    );
-  }
+  return (
+    <div className="w-100 h-100 bg-light d-flex align-items-center justify-content-center">
+      <span className="text-muted">지도 컴포넌트 자리</span>
+    </div>
+  );
+}

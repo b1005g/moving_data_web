@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { AuthProvider} from "./contexts/AuthContext.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
-import { Dashboard } from "./pages/Dashboard.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
 import ProtectedRoute from "./components/auth/ProtectedRoute.jsx"
 
 function Protected({ children }) {
