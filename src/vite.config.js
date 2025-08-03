@@ -1,13 +1,22 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import tailwind from "vite-plugin-tailwind";
 import path from 'path';
 
 export default defineConfig({
-  plugins: [react({jsxRuntime: "automatic"}), tailwind()],
+  plugins: [
+    react({jsxRuntime: "automatic"})
+  ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),   // @ 상대경로 추가한 코드
+      '@': path.resolve(__dirname, './src'),   // @ 상대경로
     },
   },
+  server: {
+    port: 3000,
+    open: true
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  }
 });
